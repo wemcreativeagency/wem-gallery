@@ -62,7 +62,7 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-sm mx-4">
         <div className="rounded-2xl p-8">
           {/* Logo */}
-          <div className="flex items-center gap-3 mb-8">
+          <div className="flex items-center gap-1 mb-8">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/logo.png"

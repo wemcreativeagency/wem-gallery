@@ -55,7 +55,7 @@ export default function LoginPage() {
           alt="We.m Studio"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/75" />
+        <div className="absolute inset-0 bg-black/85" />
       </div>
 
       {/* Card */}

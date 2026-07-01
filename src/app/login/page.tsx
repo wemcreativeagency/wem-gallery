@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import Image from "next/image";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -32,12 +31,11 @@ export default function LoginPage() {
     <div className="min-h-screen relative flex items-center justify-center">
       {/* Background image */}
       <div className="absolute inset-0 z-0">
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src="/studio.jpg"
           alt="We.m Studio"
-          fill
-          className="object-cover"
-          priority
+          className="w-full h-full object-cover"
         />
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/65 backdrop-blur-[1px]" />
@@ -48,12 +46,11 @@ export default function LoginPage() {
         <div className="rounded-2xl p-8">
           {/* Logo */}
           <div className="flex items-center gap-3 mb-8">
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src="/logo.png"
               alt="We.m logo"
-              width={96}
-              height={96}
-              className="object-contain -mr-1"
+              className="w-24 h-24 object-contain -mr-1"
               style={{ mixBlendMode: "screen" }}
             />
             <div>

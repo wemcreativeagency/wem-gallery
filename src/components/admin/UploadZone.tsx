@@ -120,20 +120,19 @@ export default function UploadZone({ galleryId, gallerySlug, onUploadComplete }:
     <div>
       <div
         {...getRootProps()}
-        className={`border border-dashed rounded-lg px-5 py-4 cursor-pointer transition ${
+        className={`border border-dashed rounded-lg px-3 py-3 cursor-pointer transition ${
           isDragActive ? "border-wem-red bg-wem-red/5" : "border-wem-border hover:border-wem-red/40"
         }`}
       >
         <input {...getInputProps()} />
-        <div className="flex items-center gap-4">
-          <Upload className={`flex-shrink-0 transition ${isDragActive ? "text-wem-red" : "text-wem-gray"}`} size={22} />
+        <div className="flex items-center gap-3">
+          <Upload className={`flex-shrink-0 transition ${isDragActive ? "text-wem-red" : "text-wem-gray"}`} size={18} />
           <div className="flex-1 min-w-0">
-            <p className="text-wem-text font-medium text-sm">
-              {isDragActive ? "Déposez les fichiers ici" : "Glissez-déposez ou"}
-              {!isDragActive && <span className="text-wem-red ml-1">parcourir</span>}
+            <p className="text-wem-text font-medium text-xs">
+              {isDragActive ? "Déposez ici" : <><span className="text-wem-red">Parcourir</span> ou glisser-déposer</>}
             </p>
-            <p className="text-wem-gray text-[11px] mt-0.5">
-              JPG · PNG · TIFF · MP4 · MOV · PDF · PSD · WAV · ZIP
+            <p className="text-wem-gray text-[10px] mt-0.5 truncate">
+              JPG · PNG · MP4 · PDF · PSD · ZIP
             </p>
           </div>
         </div>

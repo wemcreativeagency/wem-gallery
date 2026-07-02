@@ -25,7 +25,7 @@ export default function GalleryDetailClient({ galleryId, gallerySlug, initialMed
   return (
     <>
       <UploadZone galleryId={galleryId} gallerySlug={gallerySlug} onUploadComplete={onUploadComplete} />
-      <div className="mt-8">
+      <div className="mt-4">
         <AdminMediaGrid media={media} galleryId={galleryId} onDelete={onDelete} />
       </div>
     </>

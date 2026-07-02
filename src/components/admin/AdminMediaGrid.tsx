@@ -62,26 +62,27 @@ export default function AdminMediaGrid({ media, galleryId, onDelete }: Props) {
   return (
     <div>
       {/* Toolbar */}
-      <div className="flex items-center gap-3 mb-4">
-        <button onClick={toggleAll} className="flex items-center gap-2 text-sm text-wem-gray hover:text-wem-text transition">
-          <Square size={16} />
-          Tout sélectionner
+      <div className="flex items-center gap-2 mb-3 flex-wrap">
+        <button onClick={toggleAll} className="flex items-center gap-1.5 text-xs text-wem-gray hover:text-wem-text transition">
+          <Square size={14} />
+          <span className="hidden sm:inline">Tout sélectionner</span>
+          <span className="sm:hidden">Tout</span>
         </button>
         {selected.size > 0 && (
           <>
             <button onClick={() => setSelected(new Set())} className="text-xs text-wem-gray hover:text-wem-text transition underline">
-              Désélectionner ({selected.size})
+              Désél. ({selected.size})
             </button>
-            <button onClick={deleteSelected} disabled={deleting} className="flex items-center gap-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-sm px-3 py-1.5 rounded-lg transition">
-              <Trash size={14} />
-              {deleting ? "Suppression…" : `Supprimer (${selected.size})`}
+            <button onClick={deleteSelected} disabled={deleting} className="flex items-center gap-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs px-2.5 py-1.5 rounded-lg transition">
+              <Trash size={12} />
+              {deleting ? "..." : `Supprimer (${selected.size})`}
             </button>
           </>
         )}
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1.5 md:gap-3">
         {media.map((m, i) => (
           <div
             key={m.id}

@@ -8,8 +8,7 @@ import FavoritesPanel from "./FavoritesPanel";
 import LikesPanel from "./LikesPanel";
 import { getSessionId } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
-import { Star, Heart, Download, ChevronDown } from "lucide-react";
-import Image from "next/image";
+import { Star, Heart, Download } from "lucide-react";
 
 interface Props {
   gallery: Gallery & { media: Media[] };
@@ -19,7 +18,6 @@ export default function GalleryView({ gallery }: Props) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [showFavorites, setShowFavorites] = useState(false);
   const [showLikes, setShowLikes] = useState(false);
-  const [showDownloadMenu, setShowDownloadMenu] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
   const [favoritedIds, setFavoritedIds] = useState<Set<string>>(new Set());
@@ -60,10 +58,9 @@ export default function GalleryView({ gallery }: Props) {
     }
   }
 
-  async function downloadFiles(items: Media[]) {
+  async function downloadAll() {
     setDownloading(true);
-    setShowDownloadMenu(false);
-    for (const item of items) {
+    for (const item of gallery.media) {
       try {
         const res = await fetch(item.url);
         const blob = await res.blob();
@@ -75,10 +72,8 @@ export default function GalleryView({ gallery }: Props) {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        // Small delay between downloads
         await new Promise((r) => setTimeout(r, 400));
       } catch {
-        // If CORS blocks blob download, fallback to direct link
         const a = document.createElement("a");
         a.href = item.url;
         a.download = item.filename;
@@ -96,74 +91,41 @@ export default function GalleryView({ gallery }: Props) {
   const likedMedia = gallery.media.filter((m) => likedIds.has(m.id));
 
   return (
-    <div className="min-h-screen bg-wem-bg" onClick={() => setShowDownloadMenu(false)}>
+    <div className="min-h-screen bg-wem-bg">
       {/* Header */}
       <header className="sticky top-0 z-30 bg-wem-black/95 backdrop-blur border-b border-wem-border">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <Image src="/logo.png" alt="We.m" width={40} height={40} className="object-contain" style={{ mixBlendMode: "screen" }} />
-            <span className="text-base font-bold text-white tracking-tight">
-              we<span className="text-wem-red">.</span>m
-            </span>
-          </div>
-
-          {/* Titre */}
-          <div className="text-center">
-            <h1 className="font-semibold text-wem-text text-sm">{gallery.name}</h1>
-            <p className="text-xs text-wem-gray">{gallery.media.length} médias</p>
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-3">
+          {/* Logo + titre */}
+          <div className="flex items-center gap-2 min-w-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="We.m" className="w-8 h-8 object-contain flex-shrink-0" style={{ mixBlendMode: "screen" }} />
+            <div className="min-w-0">
+              <p className="font-semibold text-wem-text text-sm truncate">{gallery.name}</p>
+              <p className="text-[11px] text-wem-gray">{gallery.media.length} médias</p>
+            </div>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-2" onClick={() => setShowDownloadMenu(false)}>
-            {/* Télécharger — seulement si autorisé */}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            {/* Download */}
             {gallery.download_enabled && (
-              <div className="relative" onClick={(e) => e.stopPropagation()}>
-                <button
-                  onClick={() => setShowDownloadMenu((v) => !v)}
-                  disabled={downloading}
-                  className="flex items-center gap-1.5 bg-wem-surface border border-wem-border hover:border-wem-red text-wem-text px-3 py-2 rounded-lg text-xs font-medium transition disabled:opacity-50"
-                >
-                  <Download size={13} className={downloading ? "animate-bounce" : ""} />
-                  {downloading ? "Téléchargement..." : "Télécharger"}
-                  <ChevronDown size={11} className={`transition-transform ${showDownloadMenu ? "rotate-180" : ""}`} />
-                </button>
-
-                {showDownloadMenu && (
-                  <div className="absolute right-0 top-full mt-1.5 w-52 bg-wem-surface border border-wem-border rounded-xl shadow-xl overflow-hidden z-50">
-                    <button
-                      onClick={() => downloadFiles(favoriteMedia)}
-                      disabled={favoriteMedia.length === 0}
-                      className="w-full flex items-center gap-2.5 px-4 py-3 text-xs text-wem-text hover:bg-wem-black/50 transition disabled:opacity-40 disabled:cursor-not-allowed border-b border-wem-border"
-                    >
-                      <Star size={12} fill="#EBB705" className="text-wem-red flex-shrink-0" />
-                      <span>
-                        Ma s&eacute;lection
-                        <span className="text-wem-gray ml-1">({favoriteMedia.length})</span>
-                      </span>
-                    </button>
-                    <button
-                      onClick={() => downloadFiles(gallery.media)}
-                      className="w-full flex items-center gap-2.5 px-4 py-3 text-xs text-wem-text hover:bg-wem-black/50 transition"
-                    >
-                      <Download size={12} className="text-wem-gray flex-shrink-0" />
-                      <span>
-                        Tout t&eacute;l&eacute;charger
-                        <span className="text-wem-gray ml-1">({gallery.media.length})</span>
-                      </span>
-                    </button>
-                  </div>
-                )}
-              </div>
+              <button
+                onClick={downloadAll}
+                disabled={downloading}
+                className="flex items-center gap-1.5 bg-wem-surface border border-wem-border hover:border-wem-red text-wem-text px-2.5 py-2 rounded-lg text-xs font-medium transition disabled:opacity-50"
+              >
+                <Download size={14} className={downloading ? "animate-bounce" : ""} />
+                <span className="hidden sm:inline">{downloading ? "..." : "Télécharger"}</span>
+              </button>
             )}
 
-            {/* Mes Likes */}
+            {/* Likes */}
             <button
               onClick={() => setShowLikes(true)}
-              className="relative flex items-center gap-1.5 bg-wem-surface border border-wem-border hover:border-wem-red text-wem-text px-3 py-2 rounded-lg text-xs font-medium transition"
+              className="relative flex items-center gap-1.5 bg-wem-surface border border-wem-border hover:border-wem-red text-wem-text px-2.5 py-2 rounded-lg text-xs font-medium transition"
             >
-              <Heart size={13} className="text-wem-red" fill={likedIds.size > 0 ? "#EBB705" : "none"} />
-              Mes Likes
+              <Heart size={14} className="text-wem-red" fill={likedIds.size > 0 ? "#EBB705" : "none"} />
+              <span className="hidden sm:inline">Likes</span>
               {likedIds.size > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 bg-wem-red text-wem-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
                   {likedIds.size}
@@ -171,13 +133,13 @@ export default function GalleryView({ gallery }: Props) {
               )}
             </button>
 
-            {/* Mes Favoris */}
+            {/* Favoris */}
             <button
               onClick={() => setShowFavorites(true)}
-              className="relative flex items-center gap-1.5 bg-wem-red hover:bg-wem-red-dark text-wem-black font-semibold px-3 py-2 rounded-lg text-xs transition"
+              className="relative flex items-center gap-1.5 bg-wem-red hover:bg-wem-red-dark text-wem-black font-semibold px-2.5 py-2 rounded-lg text-xs transition"
             >
-              <Star size={13} fill="currentColor" className="text-wem-black" />
-              Mes Favoris
+              <Star size={14} fill="currentColor" />
+              <span className="hidden sm:inline">Favoris</span>
               {favoritedIds.size > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 bg-wem-black text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
                   {favoritedIds.size}
@@ -189,11 +151,11 @@ export default function GalleryView({ gallery }: Props) {
       </header>
 
       {/* Grid */}
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-3 md:px-6 py-4 md:py-8">
         {gallery.description && (
-          <p className="text-wem-gray text-sm mb-6 max-w-2xl">{gallery.description}</p>
+          <p className="text-wem-gray text-sm mb-4 md:mb-6">{gallery.description}</p>
         )}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-1.5 md:gap-3">
           {gallery.media.map((media, index) => (
             <MediaCard
               key={media.id}
@@ -208,7 +170,6 @@ export default function GalleryView({ gallery }: Props) {
         </div>
       </main>
 
-      {/* Lightbox */}
       {lightboxIndex !== null && (
         <LightBox
           media={gallery.media}
@@ -221,7 +182,6 @@ export default function GalleryView({ gallery }: Props) {
         />
       )}
 
-      {/* Likes panel */}
       {showLikes && (
         <LikesPanel
           gallery={gallery}
@@ -230,7 +190,6 @@ export default function GalleryView({ gallery }: Props) {
         />
       )}
 
-      {/* Favorites panel */}
       {showFavorites && (
         <FavoritesPanel
           gallery={gallery}

@@ -20,14 +20,14 @@ const stats = (p: Props) => [
 
 export default function DashboardStats(props: Props) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+    <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
       {stats(props).map(({ label, value, icon: Icon, color }) => (
-        <div key={label} className="bg-wem-surface rounded-xl p-5 border border-wem-border">
-          <div className={`${color} mb-3`}>
-            <Icon size={22} />
+        <div key={label} className="bg-wem-surface rounded-xl p-3 md:p-5 border border-wem-border">
+          <div className={`${color} mb-2`}>
+            <Icon size={16} />
           </div>
-          <p className="text-2xl font-bold text-wem-text">{value}</p>
-          <p className="text-wem-gray text-xs mt-1">{label}</p>
+          <p className="text-xl md:text-2xl font-bold text-wem-text">{value}</p>
+          <p className="text-wem-gray text-[10px] md:text-xs mt-0.5">{label}</p>
         </div>
       ))}
     </div>

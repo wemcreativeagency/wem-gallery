@@ -33,17 +33,18 @@ export default async function AdminDashboard() {
   return (
     <div>
       <DashboardBanner />
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-4 md:mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-wem-text">Dashboard</h1>
-          <p className="text-wem-gray text-sm mt-1">Vue d&apos;ensemble de We.m Gallery</p>
+          <h1 className="text-lg md:text-2xl font-bold text-wem-text">Dashboard</h1>
+          <p className="text-wem-gray text-xs md:text-sm mt-0.5">Vue d&apos;ensemble</p>
         </div>
         <Link
           href="/admin/galleries/new"
-          className="flex items-center gap-2 bg-wem-red hover:bg-wem-red-dark text-wem-black font-semibold px-4 py-2 rounded-lg text-sm font-medium transition"
+          className="flex items-center gap-1.5 bg-wem-red hover:bg-wem-red-dark text-wem-black font-semibold px-3 py-2 rounded-lg text-xs md:text-sm transition"
         >
-          <Plus size={16} />
-          Nouvelle galerie
+          <Plus size={14} />
+          <span className="hidden sm:inline">Nouvelle galerie</span>
+          <span className="sm:hidden">Nouveau</span>
         </Link>
       </div>
 
@@ -56,10 +57,10 @@ export default async function AdminDashboard() {
         favorites={favoriteCount ?? 0}
       />
 
-      <div className="mt-10">
-        <h2 className="text-lg font-semibold text-wem-text mb-4">Galeries récentes</h2>
+      <div className="mt-6 md:mt-10">
+        <h2 className="text-sm md:text-lg font-semibold text-wem-text mb-3 md:mb-4">Galeries récentes</h2>
         {recentGalleries && recentGalleries.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-3">
             {recentGalleries.map((gallery) => (
               <GalleryCard key={gallery.id} gallery={gallery as any} />
             ))}
